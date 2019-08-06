@@ -1,0 +1,55 @@
+.App {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+.feed {
+  max-width: 50%;
+  header {
+    font-size: 3em;
+    font-weight: bold;
+    margin: 20px;
+  }
+  .post-list {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.post {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  margin: 8px;
+  padding: 8px;
+  border: 1px black solid;
+  background-color: lightcyan;
+  font-weight: bold;
+  > img,
+  video {
+    margin: 8px;
+    padding: 8px;
+    max-width: 100%;
+  }
+}
+
+.loading-indicator {
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 20vw;
+  height: 20vw;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
