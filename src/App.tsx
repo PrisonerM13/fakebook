@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.scss';
-import PostList from './components/PostList';
 import Post from './components/Post';
+import Feed from './containers/Feed';
 
 const App: React.FC = () => {
   return (
@@ -11,8 +11,7 @@ const App: React.FC = () => {
       <Router>
         <Switch>
           <Route path="/:id" component={Post} />
-          <Route path="/" component={PostList} />
-          <Route render={() => 'Page not found'}/>
+          <Route path="/" component={Feed} />
         </Switch>
       </Router>
     </div>
