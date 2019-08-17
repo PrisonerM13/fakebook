@@ -1,4 +1,5 @@
 import React from 'react';
+import TextareaAutosize from 'react-textarea-autosize';
 import { useInput } from '../hooks/useInput';
 import IPost from '../models/IPost';
 import DataService from '../services/data.service';
@@ -13,22 +14,31 @@ const PostForm: React.FC<IProps> = ({ onSubmit }) => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const formData = new FormData(event.target as HTMLFormElement);
-    const data = Object.fromEntries(new Map([...formData.entries()]));
-    const post = await dataService.insert(data);
+    const formElement = event.target as HTMLFormElement;
+    const formData = new FormData(formElement);
+    const post = await dataService.insert(formData);
+    formElement.reset();
+    input.setValue('');
     onSubmit(post);
   };
 
   return (
     <form className="post-form" autoComplete="off" onSubmit={handleSubmit}>
       <header>Create Post</header>
-      <textarea
+      <TextareaAutosize
         name="text"
-        placeholder="enter your input here..."
+        minRows={5}
+        maxRows={10}
         autoFocus={true}
+        spellCheck={true}
+        useCacheForDOMMeasurements={true}
+        placeholder="Enter your text here..."
         {...input}
       />
-      <button type="submit">Submit</button>
+      <input type="file" name="image" accept="image/*" />
+      <button type="submit" disabled={input.value ? false : true}>
+        Submit
+      </button>
     </form>
   );
 };
