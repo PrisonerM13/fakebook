@@ -1,19 +1,22 @@
 import React from 'react';
 import { useInput } from '../hooks/useInput';
-import { createPost } from '../services/posts.data.service';
+import IPost from '../models/IPost';
+import DataService from '../services/data.service';
 
-const PostForm: React.FC = () => {
+const dataService = new DataService<IPost>('posts');
+
+interface IProps {
+  onSubmit: (post: IPost) => void;
+}
+const PostForm: React.FC<IProps> = ({ onSubmit }) => {
   const input = useInput();
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.target as HTMLFormElement);
     const data = Object.fromEntries(new Map([...formData.entries()]));
-    onSubmit(data);
-  };
-
-  const onSubmit = (data: object) => {
-    createPost(data);
+    const post = await dataService.insert(data);
+    onSubmit(post);
   };
 
   return (

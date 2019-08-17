@@ -1,18 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import IPost from '../models/IPost';
 import Loading from './Loading';
 import Post from './Post';
 
-const PostList: React.FC = () => {
-  const [postList, setPostList] = useState<IPost[]>();
+// const dataService = new DataService<IPost>('posts');
 
-  useEffect(() => {
-    const getData = async () => {
-      setPostList(await getPostList());
-    };
-    getData();
-  });
-
+const PostList: React.FC<{ postList: IPost[] }> = ({ postList }) => {
   if (!postList) {
     return <Loading />;
   }
@@ -25,10 +18,5 @@ const PostList: React.FC = () => {
     </section>
   );
 };
-
-async function getPostList() {
-  const result = await fetch('http://localhost:4000/api/posts');
-  return await result.json();
-}
 
 export default PostList;
