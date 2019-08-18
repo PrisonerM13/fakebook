@@ -5,11 +5,6 @@ import { dataService } from '../App';
 import IPost from '../models/IPost';
 import { imagesBaseURL } from '../services/data.service';
 
-enum WorkingMode {
-  create,
-  update,
-}
-
 interface IProps {
   onSubmit: (post: IPost) => void;
 }
@@ -21,12 +16,10 @@ const PostForm: React.FC<IProps & RouteComponentProps<{ id: string }>> = ({
   const [text, setText] = useState('');
   const [file, setFile] = useState('');
   const [isUpdateDone, setIsUpdateDone] = useState(false);
-  const workingMode = useRef(WorkingMode.create);
   // get data on mount
   useEffect(() => {
     const getPost = async (id: number) => {
       dataService.getById(id).then(data => {
-        workingMode.current = WorkingMode.update;
         setPost(data);
         setText(data.text);
       });
