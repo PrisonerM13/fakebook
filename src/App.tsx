@@ -6,7 +6,7 @@ import Feed from './containers/Feed';
 import IPost from './models/IPost';
 import DataService from './services/data.service';
 
-export const dataService = new DataService<IPost>('posts', 'id');
+export const dataService = new DataService<IPost>('posts', '_id');
 
 const App: React.FC = () => {
   return (

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import IPost from '../models/IPost';
-import { imagesBaseURL } from '../services/data.service';
+import { imagesURL } from '../services/data.service';
 import MenuMoreVertical from './MenuMoreVertical';
 
 interface IProps {
@@ -9,7 +9,7 @@ interface IProps {
 }
 
 const PostCard: React.FC<IPost & IProps> = ({
-  id,
+  _id,
   text,
   createdAt,
   image,
@@ -31,7 +31,7 @@ const PostCard: React.FC<IPost & IProps> = ({
   };
 
   if (isEditSelected) {
-    return <Redirect push={true} to={`/${id}`} />;
+    return <Redirect push={true} to={`/${_id}`} />;
   }
 
   return (
@@ -51,7 +51,7 @@ const PostCard: React.FC<IPost & IProps> = ({
         <MenuMoreVertical onItemClick={onMenuClick} />
       </section>
       <header>{text}</header>
-      {image && <img src={`${imagesBaseURL}/${image}`} alt={text} />}
+      {image && <img src={`${imagesURL}/${image}`} alt={text} />}
     </section>
   );
 };
