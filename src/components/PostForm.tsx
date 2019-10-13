@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Redirect, RouteComponentProps, withRouter } from 'react-router';
 import TextareaAutosize from 'react-textarea-autosize';
 import { dataService } from '../App';
 import IPost from '../models/IPost';
-import { imagesBaseURL } from '../services/data.service';
+import { imagesURL } from '../services/data.service';
 
 interface IProps {
   onSubmit: (post: IPost) => void;
@@ -14,7 +14,8 @@ const PostForm: React.FC<IProps & RouteComponentProps<{ id: string }>> = ({
 }) => {
   const [post, setPost] = useState<IPost>();
   const [text, setText] = useState('');
-  const [file, setFile] = useState('');
+  const [file, setFile] = useState();
+  const [fileDataURI, setFileDataURI] = useState();
   const [isUpdateDone, setIsUpdateDone] = useState(false);
   // get data on mount
   useEffect(() => {
@@ -34,27 +35,37 @@ const PostForm: React.FC<IProps & RouteComponentProps<{ id: string }>> = ({
     const formElement = event.target as HTMLFormElement;
     const formData = new FormData(formElement);
     if (post) {
-      await dataService.update(post.id, formData);
+      await dataService.update(post._id, formData);
       setIsUpdateDone(true);
     } else {
       formData.append('createdAt', new Date().toISOString());
       const newPost = await dataService.insert(formData);
       formElement.reset();
+      setPost(undefined);
       setText('');
+      setFileDataURI(undefined);
       onSubmit(newPost);
     }
   };
 
-  const onTextChange = (event: React.FormEvent<HTMLTextAreaElement>) => {
+  const onTextChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const element = event.target as HTMLTextAreaElement;
     setText(element.value);
   };
 
-  const onFileChange = (event: React.FormEvent<HTMLInputElement>) => {
+  const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const element = event.target as HTMLInputElement;
-    setFile(element.value);
+    const selectedFile = element.files && element.files[0];
+    if (selectedFile) {
+      // convert to data URI. see: https://stackoverflow.com/questions/4459379/preview-an-image-before-it-is-uploaded
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        setFileDataURI(e && e.target && e.target.result);
+        setFile(selectedFile);
+      };
+      reader.readAsDataURL(selectedFile);
+    }
   };
-
   if (isUpdateDone) {
     return <Redirect push={true} to={`/`} />;
   }
@@ -73,8 +84,9 @@ const PostForm: React.FC<IProps & RouteComponentProps<{ id: string }>> = ({
         value={text}
         onChange={onTextChange}
       />
-      {post && post.image && (
-        <img src={`${imagesBaseURL}/${post.image}`} alt={post.text} />
+      {fileDataURI && <img src={fileDataURI} alt={text} />}
+      {!fileDataURI && post && post.image && (
+        <img src={`${imagesURL}/${post.image}`} alt={text} />
       )}
       <input
         type="file"
@@ -84,7 +96,7 @@ const PostForm: React.FC<IProps & RouteComponentProps<{ id: string }>> = ({
       />
       <button
         type="submit"
-        disabled={!((post ? post.text !== text : text !== '') || file !== '')}
+        disabled={!text || (post && post.text === text && !file)}
       >
         Submit
       </button>

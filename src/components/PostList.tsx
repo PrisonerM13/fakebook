@@ -1,11 +1,11 @@
 import React from 'react';
-import IPost from '../models/IPost';
+import IPostList from '../models/IPostList';
 import Loading from './Loading';
 import PostCard from './PostCard';
 
 interface IProps {
-  postList: IPost[];
-  onPostDelete: (index: number) => void;
+  postList: IPostList;
+  onPostDelete: (id: number) => void;
 }
 
 const PostList: React.FC<IProps> = ({ postList, onPostDelete }) => {
@@ -15,8 +15,8 @@ const PostList: React.FC<IProps> = ({ postList, onPostDelete }) => {
 
   return (
     <section className="post-list">
-      {postList.map((post, index) => (
-        <PostCard key={post.id} onDelete={onPostDelete.bind(null, index)} {...post} />
+      {Object.values(postList).reverse().map(post => (
+        <PostCard key={post._id} onDelete={onPostDelete.bind(null, post._id)} {...post} />
       ))}
     </section>
   );

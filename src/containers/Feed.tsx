@@ -3,28 +3,28 @@ import { dataService } from '../App';
 import PostForm from '../components/PostForm';
 import PostList from '../components/PostList';
 import IPost from '../models/IPost';
+import IPostList from '../models/IPostList';
 
 const Feed: React.FC = () => {
-  const [postList, setPostList] = useState<IPost[]>([]);
+  const [postList, setPostList] = useState<IPostList>({});
   useEffect(() => {
     const getData = async () => {
       const posts = await dataService.getAll();
-      // sort in descending order
-      posts.sort((post1, post2) => post2.id - post1.id);
-      setPostList(posts);
+      const list: IPostList = {};
+      posts.forEach(post => list[post._id] = post);
+      setPostList(list);
     };
-    if (!postList || postList.length === 0) {
-      getData();
-    }
-  }, [postList]);
+    getData();
+  }, []);
 
   const onNewPost = (newPost: IPost) => {
-    setPostList([newPost, ...postList]);
+    setPostList({ [newPost._id]: newPost, ...postList });
   };
 
-  const onPostDelete = async (index: number) => {
-    await dataService.remove(postList[index].id);
-    setPostList([...postList.slice(0, index), ...postList.slice(index + 1)]);
+  const onPostDelete = async (id: number) => {
+    await dataService.remove(id);
+    delete postList[id];
+    setPostList({ ...postList });
   };
 
   return (
