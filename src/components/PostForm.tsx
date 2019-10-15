@@ -66,6 +66,7 @@ const PostForm: React.FC<IProps & RouteComponentProps<{ id: string }>> = ({
       reader.readAsDataURL(selectedFile);
     }
   };
+
   if (isUpdateDone) {
     return <Redirect push={true} to={`/`} />;
   }

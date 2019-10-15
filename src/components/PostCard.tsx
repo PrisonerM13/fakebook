@@ -5,7 +5,7 @@ import { imagesURL } from '../services/data.service';
 import MenuMoreVertical from './MenuMoreVertical';
 
 interface IProps {
-  onDelete: () => void;
+  onDelete: (id: number) => void;
 }
 
 const PostCard: React.FC<IPost & IProps> = ({
@@ -23,7 +23,7 @@ const PostCard: React.FC<IPost & IProps> = ({
         setIsEditSelected(true);
         break;
       case 'delete':
-        onDelete();
+        onDelete(_id);
         break;
       default:
         break;

@@ -16,7 +16,7 @@ const PostList: React.FC<IProps> = ({ postList, onPostDelete }) => {
   return (
     <section className="post-list">
       {Object.values(postList).reverse().map(post => (
-        <PostCard key={post._id} onDelete={onPostDelete.bind(null, post._id)} {...post} />
+        <PostCard key={post._id} onDelete={onPostDelete} {...post} />
       ))}
     </section>
   );

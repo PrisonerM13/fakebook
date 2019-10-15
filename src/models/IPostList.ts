@@ -3,5 +3,5 @@
 import IPost from './IPost';
 
 export default interface IPostList {
-  [index: number]: IPost;
+  [id: number]: IPost;
 }
